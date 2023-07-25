@@ -1,13 +1,29 @@
+# LetsGetLocation
+
+This is a sample on how you can ask for location permission on a iOS device.
+
+* Step 1: Set up Class containing `CLLocationManager`.
+
+* Step 2: Set up delegate objects confirming to `CLLocationManagerDelegate` protocol [(Apple Documentation)](https://developer.apple.com/documentation/corelocation/cllocationmanagerdelegate) that will receive updates from `CLLocationManager`.
+
+* Step 3: Set up a `@Published` variable so that our SwiftUI view will update when the status changes in our Class
+
+### See the code below for clearence
+
+```swift
+
 //
 //  LocationManager.swift
 //  LetsGetLocation
 //
 //  Created by Md. Saifullah on 21/7/23.
 //
+
 import CoreLocation
 import Foundation
 
 class LocationPermissionManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
     @Published var coordinates: CLLocationCoordinate2D?
 
@@ -21,50 +37,47 @@ class LocationPermissionManager: NSObject, ObservableObject, CLLocationManagerDe
     // MARK: this three function are created to manually simulate asking location permission and location
 
     func requestLocationPermissionAlways() {
-        print("requestLocationPermissionAlways")
 
         locationManager.requestAlwaysAuthorization()
     }
 
     func requestLocationPermissionWhenInUse() {
-        print("requestLocationPermissionWhenInUse")
 
         locationManager.requestWhenInUseAuthorization()
     }
 
     func requestLocation() {
-        print("requestLocation")
 
         locationManager.requestLocation()
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        print("locationManagerDidChangeAuthorization")
+
+        // MARK: This section is executed every time the class is instantiated.
 
         authorizationStatus = manager.authorizationStatus
 
         switch manager.authorizationStatus {
         case .notDetermined:
 
-            // MARK: this section is executed every time the class is instantiated.
-
             requestLocationPermissionWhenInUse()
-            // requestLocationPermissionAlways()
+            //requestLocationPermissionAlways()
 
         case .restricted, .denied: break
 
         case .authorizedAlways, .authorizedWhenInUse:
+
             requestLocation()
 
         @unknown default:
+
             print("Use your own way of handling unknown cases of future")
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // MARK: this section is executed every time the location is updated
 
-        print("locationManager1")
+        // MARK: This section is executed every time the location is updated
 
         guard let location = locations.last else { return }
 
@@ -72,13 +85,17 @@ class LocationPermissionManager: NSObject, ObservableObject, CLLocationManagerDe
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+
+        // MARK: Use your own way of handling Error
+
         print("error: \(error.localizedDescription)")
     }
 }
 
-// MARK: this enums are created for better readability
+/* MARK: This enums are created for better readability
 
-/// because the authorizationStatus return raw INT32 value when printed
+  Because the authorizationStatus return raw INT32 value when printed
+*/
 
 enum AuthorizationStatus: String {
     case notDetermined
@@ -106,3 +123,8 @@ extension CLAuthorizationStatus {
         }
     }
 }
+
+```
+
+### Note:
+> The app's Info.plist must contain an `"NSLocationWhenInUseUsageDescription"` key with a string value for asking `when in use permission` and both `“NSLocationAlwaysAndWhenInUseUsageDescription”` and `“NSLocationWhenInUseUsageDescription”` for asking `always  in use permission` explaining to the user how the app uses this data.
