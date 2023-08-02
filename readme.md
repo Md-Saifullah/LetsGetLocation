@@ -8,7 +8,7 @@ This is a sample on how you can ask for location permission on a iOS device.
 
 * Step 3: Set up a `@Published` variable so that our SwiftUI view will update when the status changes in our Class
 
-### See the code below for clearence
+### See the code below for clearance
 
 ```swift
 
@@ -128,3 +128,6 @@ extension CLAuthorizationStatus {
 
 ### Note:
 > The app's Info.plist must contain an `"NSLocationWhenInUseUsageDescription"` key with a string value for asking `when in use permission` and both `“NSLocationAlwaysAndWhenInUseUsageDescription”` and `“NSLocationWhenInUseUsageDescription”` for asking `always  in use permission` explaining to the user how the app uses this data.
+
+
+[Source](https://coledennis.medium.com/tutorial-connecting-core-location-to-a-swiftui-app-dc62563bd1de)
